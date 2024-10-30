@@ -1,0 +1,98 @@
+<!-- layout.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Your Dashboard</title>
+    
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css">
+    
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+    
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+ 
+    <!-- Custom Styles -->
+    <style>
+        .sidebar {
+            border-right: 1px solid #fff; /* Adds a right border to the sidebar */
+        }
+        .nav-link {
+            transition: background-color 0.3s; /* Smooth transition for hover effects */
+        }
+        .nav-link:hover {
+            background-color: rgba(255, 255, 255, 0.1); /* Lighten background on hover */
+        }
+        .dropdown-item {
+            background-color: orange; /* Set background color to orange */
+            color: white; /* Set text color to white */
+            padding: 5px;
+            border-radius: 5px;
+            margin: 2px;
+        }
+        .dropdown-item:hover {
+            background-color: #ff9800; /* Darker orange for hover effect */
+        }
+        .collapse {
+            transition: max-height 0.5s ease; /* Smooth transition for collapsing */
+        }
+        .list-unstyled {
+            margin: 0; /* Remove default margin */
+        }
+        /* charts in total riders*/
+        .custom-bg {
+            background-color: #f0f8ff; /* AliceBlue */
+            color: black; /* Text color */
+            padding: 15px; /* Padding for content */
+            border-radius: 5px; /* Rounded corners */
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Shadow effect */
+            margin-bottom: 20px; /* Spacing below the chart */
+        }
+        /*add product bg*/
+        .bg-orange {
+            background-color: orange; /* Set background color to orange */
+        }
+        canvas {
+            display: block; /* Ensure it's visible */
+            width: 100% !important; /* To ensure responsive size */
+            height: 400px; /* Set a fixed height for charts */
+            margin: 0 auto; /* Center the canvas */
+           
+            background-color: white; /* White background for better contrast */
+            border-radius: 5px; /* Rounded corners for the canvas */
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3); /* Light shadow for depth */
+        }
+
+        #leadClassificationPieChart {
+            max-width: 400px; /* Adjust as necessary */
+            max-height: 400px; /* Adjust as necessary */
+            width: 100%; /* Make it responsive */
+            height: auto; /* Adjust height automatically */
+        }
+        
+    </style>
+</head>
+<body>
+
+    {% block content %}
+    {% endblock %}
+
+    <!-- jQuery, Popper.js, and Bootstrap JS -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.min.js"></script>
+    
+    <!-- Load Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+    <!-- FileSaver.js for file download functionality -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/FileSaver.js/2.0.5/FileSaver.min.js"></script>
+
+    <!-- Include any custom JS files -->
+    <script src="{{ url_for('static', filename='js/custom.js') }}"></script>
+
+</body>
+</html>

@@ -1,0 +1,79 @@
+{% extends "layout.html" %}
+
+{% block content %}
+<!-- Header Section -->
+<div style="background-color: orange;" class="p-3 d-flex justify-content-between align-items-center rounded">
+    <h2 class="text-dark p-2">
+        <i class="fas fa-list-alt"></i> Total Deals
+    </h2>
+    <!-- Add download button with an icon and green color -->
+    <button id="download-btn" type="button" class="btn btn-success">
+        <i class="fas fa-download"></i> Download Deals
+    </button>
+</div>
+
+<!-- Table Section -->
+<div class="mt-4">
+    <table class="table table-striped" style="width: 100%; border-collapse: collapse;">
+        <thead style="background-color: #007bff; color: white;">
+            <tr>
+                <th style="padding: 10px;">Deal ID</th>
+                <th style="padding: 10px;">Rider</th>
+                <th style="padding: 10px;">Product</th>
+                <th style="padding: 10px;">Created At</th>
+                <th style="padding: 10px;">Action</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for deal in deals %}
+                <tr>
+                    <td style="padding: 10px;">{{ deal[0] }}</td>
+                    <td style="padding: 10px;">
+                        <a href="/rider_details/{{ deal[1] }}" style="text-decoration: none; color: inherit;">
+                            {{ deal[2] }}
+                        </a>
+                    </td>
+                    <td style="padding: 10px;">{{ deal[3] }}</td>
+                    <td style="padding: 10px;">{{ deal[4] }}</td>
+                    <td style="padding: 10px;">
+                        <!-- Delete Button with an icon -->
+                        <form action="{{ url_for('delete_deal', deal_id=deal[0]) }}" method="POST" style="display:inline;">
+                            <button type="submit" class="btn btn-danger btn-sm" onclick="return confirm('Are you sure you want to delete this deal?');">
+                                <i class="fas fa-trash-alt"></i> Delete
+                            </button>
+                        </form>
+                    </td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+
+<!-- JavaScript to handle the download functionality -->
+<script>
+document.getElementById('download-btn').addEventListener('click', function() {
+    // Prepare the data for download
+    let dealsData = 'Deal ID, Rider, Product, Created At\n'; // CSV headers
+    const rows = document.querySelectorAll('tbody tr');
+    
+    rows.forEach((row) => {
+        const columns = row.querySelectorAll('td');
+        const deal = Array.from(columns).map(col => col.innerText).join(', ');
+        dealsData += deal + '\n';
+    });
+
+    // Create the Blob for the download as CSV
+    const blob = new Blob([dealsData], { type: 'text/csv' });
+
+    // Create a link to trigger the download
+    const link = document.createElement('a');
+    link.href = window.URL.createObjectURL(blob);
+    link.download = 'total_deals.csv'; // Downloading as a CSV file
+
+    // Append link, trigger click, and remove link
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+});
+</script>
+{% endblock %}

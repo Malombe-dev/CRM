@@ -1,0 +1,98 @@
+{% extends "layout.html" %}
+
+{% block content %}
+<div class="container mt-4">
+    <h2 class="text-primary mb-4" style="color: black;">Rider Details</h2>
+    
+    <a href="{{ url_for('totalDeals') }}" class="btn btn-primary" style="position: absolute; top: 20px; right: 20px;">Back to Total Deals</a>
+    
+    <form>
+        <div class="card mb-4" style="transition: transform 0.2s;">
+            <div class="card-body">
+                <table class="table">
+                    <tbody>
+                        <tr>
+                            <th style="color: #007bff; font-weight: bold;">Rider ID</th>
+                            <td style="color: black;">{{ rider[0] }}</td>
+                        </tr>
+                        <tr> 
+                            <th style="color: #007bff; font-weight: bold;">Name</th>
+                            <td style="color: black;">{{ rider[1] }}</td>
+                        </tr>
+                        <tr>
+                            <th style="color: #007bff; font-weight: bold;">Phone Number</th>
+                            <td style="color: black;">{{ rider[2] }}</td>
+                        </tr>
+                        <tr>
+                            <th style="color: #007bff; font-weight: bold;">Work Location</th>
+                            <td style="color: black;">{{ rider[3] }}</td>
+                        </tr>
+                        <tr>
+                            <th style="color: #007bff; font-weight: bold;">Current Motorbike</th>
+                            <td style="color: black;">{{ rider[4] }}</td>
+                        </tr>
+                        <tr>
+                            <th style="color: #007bff; font-weight: bold;">Fuel Consumption per Day</th>
+                            <td style="color: black;">{{ rider[5] }}</td>
+                        </tr>
+                        <tr>
+                            <th style="color: #007bff; font-weight: bold;">Any Pending Loan</th>
+                            <td style="color: black;">{{ 'Yes' if rider[6] else 'No' }}</td>
+                        </tr>
+                        <tr>
+                            <th style="color: #007bff; font-weight: bold;">Lead Classification</th>
+                            <td style="color: black;">{{ rider[7] }}</td>
+                        </tr>
+                        <tr>
+                            <th style="color: #007bff; font-weight: bold;">Any Comments</th>
+                            <td style="color: black;">{{ rider[8] }}</td>
+                        </tr>
+                        <tr>
+                            <th style="color: #007bff; font-weight: bold;">Submitted By</th>
+                            <td style="color: black;">{{ rider[9] }}</td>
+                        </tr>
+                        <tr>
+                            <th style="color: #007bff; font-weight: bold;">Created At</th>
+                            <td style="color: black;">{{ rider[10] }}</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    
+        <h3 class="text-primary mb-4" style="color: black;">Deals Associated with this Rider</h3>
+        <table class="table table-striped">
+            <thead>
+                <tr style="background-color: #007bff; color: white;">
+                    <th style="font-weight: bold;">Deal ID</th>
+                    <th style="font-weight: bold;">Product</th>
+                    <th style="font-weight: bold;">Created At</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% if deals %}
+                    {% for deal in deals %}
+                        <tr>
+                            <td>{{ deal[0] }}</td>
+                            <td>{{ deal[1] }}</td>
+                            <td>{{ deal[2] }}</td>
+                        </tr>
+                    {% endfor %}
+                {% else %}
+                    <tr>
+                        <td colspan="3" style="text-align: center;">No deals found for this rider.</td>
+                    </tr>
+                {% endif %}
+            </tbody>
+        </table>
+    </form>
+</div>
+
+<style>
+.card:hover {
+    transform: scale(1.02);
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+}
+</style>
+
+{% endblock %}

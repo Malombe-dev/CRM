@@ -1,0 +1,37 @@
+{% extends "layout.html" %}
+
+{% block content %}
+<div class="container mt-5">
+    <div class="bg-orange p-4 mb-4 rounded">
+        <h2 class="text-dark mb-0">Add New Product</h2>
+    </div>
+
+    <div class="card shadow">
+        <div class="card-body">
+            <form action="/addProduct" method="POST" enctype="multipart/form-data">
+                <!-- Product Name -->
+                <div class="mb-3">
+                    <label for="product_name" class="form-label text-primary">Product Name <i class="fas fa-box"></i></label>
+                    <input type="text" class="form-control" id="product_name" name="product_name" placeholder="Enter product name" required>
+                </div>
+
+                <!-- Product Description -->
+                <div class="mb-3">
+                    <label for="product_description" class="form-label text-primary">Product Description <i class="fas fa-pencil-alt"></i></label>
+                    <textarea class="form-control" id="product_description" name="product_description" rows="3" placeholder="Enter product description" required></textarea>
+                </div>
+
+                <!-- Product Image -->
+                <div class="mb-3">
+                    <label for="product_image" class="form-label text-primary">Product Image <i class="fas fa-image"></i></label>
+                    <input type="file" class="form-control" id="product_image" name="product_image" required>
+                </div>
+
+                <!-- Submit Button -->
+                <button type="submit" class="btn btn-primary" style="background-color: blue;">Add Product</button>
+                <a href="{{ url_for('dashboard') }}" class="btn btn-warning" style="color: white; background-color: orange;">Cancel</a>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}

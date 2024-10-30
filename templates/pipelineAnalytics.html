@@ -1,0 +1,47 @@
+{% extends "layout.html" %}
+
+{% block content %}
+<div class="container">
+    
+    <!-- Card for displaying total deals count -->
+    <div class="card text-center mb-4">
+        <div class="card-header bg-info text-white">
+            <h4>Total Deals</h4>
+        </div>
+        <div class="card-body">
+            <h1 class="display-4 text-primary">{{ total_deals }}</h1>
+            <p class="card-text">Total number of deals made in the system.</p>
+        </div>
+        <div class="card-footer text-muted">
+            <i class="fas fa-tags fa-2x"></i> <!-- Icon for deals -->
+        </div>
+    </div>
+
+    <div class="row">
+        <!-- Pie Chart -->
+        <div class="col-md-6">
+            <h4>Lead Classification Pie Chart</h4>
+            <canvas id="leadClassificationPieChart" width="400" height="400"></canvas>
+        </div>
+
+        <!-- Funnel Chart -->
+        <div class="col-md-6">
+            <h4>Lead Classification Funnel Chart</h4>
+            <canvas id="leadClassificationFunnelChart" width="400" height="400"></canvas>
+        </div>
+    </div>
+</div>
+
+<style>
+    /* Card styles for hover effect */
+    .card {
+        transition: transform 0.2s;
+    }
+    
+    .card:hover {
+        transform: scale(1.05);
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    }
+</style>
+
+{% endblock %}

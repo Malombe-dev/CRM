@@ -1,0 +1,62 @@
+{% extends "layout.html" %}
+
+{% block content %}
+<!-- Banner Section -->
+<div class="bg-orange text-dark text-center py-4 mb-4" style="border-radius: 10px;">
+    <h1 class="display-4">
+        <i class="fas fa-handshake"></i> Create Deal
+    </h1>
+    <p class="lead"><i class="fas fa-info-circle"></i> Select a rider and a product to create a new deal.</p>
+</div>
+
+<!-- Form Section -->
+<div class="container">
+    <form action="{{ url_for('createDeal') }}" method="POST" class="p-4 shadow-sm" style="background-color: #f8f9fa; border-radius: 10px;">
+        <div class="mb-3">
+            <label for="rider_id" class="form-label" style="color: #007bff;">
+                <i class="fas fa-user"></i> Select Rider:
+            </label>
+            <select name="rider_id" id="rider_id" class="form-select" required>
+                {% for rider in riders %}
+                    <option value="{{ rider[0] }}">{{ rider[1] }}</option>
+                {% endfor %}
+            </select>
+        </div>
+        
+        <div class="mb-3">
+            <label for="product_id" class="form-label" style="color: #007bff;">
+                <i class="fas fa-box"></i> Select Product:
+            </label>
+            <select name="product_id" id="product_id" class="form-select" required>
+                {% for product in products %}
+                    <option value="{{ product[0] }}">{{ product[1] }}</option>
+                {% endfor %}
+            </select>
+        </div>
+        
+        <div class="text-center">
+            <button type="submit" class="btn btn-primary" style="background-color: #007bff; border-color: #007bff;">
+                <i class="fas fa-check"></i> Create Deal
+            </button>
+            <a href="{{ url_for('dashboard') }}" class="btn btn-secondary ms-2">
+                <i class="fas fa-times"></i> Cancel
+            </a>
+        </div>
+    </form>
+</div>
+
+<script>
+$(document).ready(function() {
+    // Implementing the suggestion functionality for the rider and product dropdowns
+    $('#rider_id').select2({
+        placeholder: "Select a Rider",
+        allowClear: true
+    });
+
+    $('#product_id').select2({
+        placeholder: "Select a Product",
+        allowClear: true
+    });
+});
+</script>
+{% endblock %}

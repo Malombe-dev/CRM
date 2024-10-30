@@ -1,0 +1,54 @@
+{% extends "layout.html" %}
+
+{% block content %}
+<div class="container mt-5">
+    <!-- Card for displaying total deals count -->
+    <div class="card text-center mb-4">
+        <div class="card-header bg-info text-white">
+            <h4>Total Deals</h4>
+        </div>
+        <div class="card-body">
+            <h1 class="display-4 text-primary">{{ total_deals_count }}</h1>
+            <p class="card-text">Total number of deals made in the system.</p>
+        </div>
+        <div class="card-footer text-muted">
+            <i class="fas fa-tags fa-2x"></i> <!-- Icon for deals -->
+        </div>
+    </div>
+
+    <div class="row">
+        <!-- Chart for Deals per Submitted By -->
+        <div class="col-md-6">
+            <h5>Deals per Submitted By</h5>
+            <div class="card mb-4">
+                <div class="card-body">
+                    <canvas id="dealsSubmittedByChart" width="400" height="400"></canvas>
+                </div>
+            </div>
+        </div>
+
+        <!-- Chart for Total Deals per Product -->
+        <div class="col-md-6">
+            <h5>Total Deals per Product</h5>
+            <div class="card mb-4">
+                <div class="card-body">
+                    <canvas id="dealsPerProductChart" width="400" height="400"></canvas>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    /* Card styles for hover effect */
+    .card {
+        transition: transform 0.2s;
+    }
+    
+    .card:hover {
+        transform: scale(1.05);
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    }
+</style>
+
+{% endblock %}

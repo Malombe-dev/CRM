@@ -1,0 +1,325 @@
+{% extends "layout.html" %}
+
+{% block content %}
+<div class="d-flex">
+    <!-- Sidebar -->
+    <nav class="bg-primary text-white" style="min-height: 800px;">
+        <div class="p-4">
+            <h2><a class="dropdown-item text-dark" href="#" onclick="loadContent('mainContent')">Dashboard</a></h2>
+            <ul class="nav flex-column">
+                <!-- Customer Management Section -->
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle text-white" href="#" id="dropdownCustomers" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                        <i class="fas fa-users"></i> Customer Management
+                    </a>
+                    <ul class="dropdown-menu bg-primary" aria-labelledby="dropdownCustomers">
+                        <li><a class="dropdown-item text-white" href="#" onclick="loadContent('allCustomers')">All Customers</a></li>
+                    </ul>
+                </li>
+                <!-- Riders Section -->
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle text-white" href="#" id="dropdownRiders" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                        <i class="fas fa-biking"></i> Riders
+                    </a>
+                    <ul class="dropdown-menu bg-primary" aria-labelledby="dropdownRiders">
+                        <li><a class="dropdown-item text-white" href="#" onclick="loadContent('createRider')">Create Riders</a></li>
+                        <li><a class="dropdown-item text-white" href="#" onclick="loadContent('totalRiders')">Total Riders</a></li>
+                    </ul>
+                </li>
+                <!-- Deals Section -->
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle text-white" href="#" id="dropdownDeals" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                        <i class="fas fa-handshake"></i> Deals
+                    </a>
+                    <ul class="dropdown-menu bg-primary" aria-labelledby="dropdownDeals">
+                        <li><a class="dropdown-item text-white" href="#" onclick="loadContent('createDeal')">Create Deal</a></li>
+                        <li><a class="dropdown-item text-white" href="#" onclick="loadContent('totalDeals')">Total Deals</a></li>
+                        <li><a class="dropdown-item text-white" href="#" onclick="loadContent('addProduct')">Add Product</a></li>
+                    </ul>
+                </li>
+                <!-- Analytics Section -->
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle text-white" href="#" id="dropdownAnalytics" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                        <i class="fas fa-chart-bar"></i> Analytics
+                    </a>
+                    <ul class="dropdown-menu bg-primary" aria-labelledby="dropdownAnalytics">
+                        <li><a class="dropdown-item text-white" href="#" onclick="loadContent('ridersAnalytics')">Riders Analytics</a></li>
+                        <li><a class="dropdown-item text-white" href="#" onclick="loadContent('pipelineAnalytics')">Pipeline Analytics</a></li>
+                        <li><a class="dropdown-item text-white" href="#" onclick="loadContent('dealsAnalytics')">Deals Analytics</a></li>
+                        <li><a class="dropdown-item text-white" href="#" onclick="loadContent('byProductAnalytics')">By Product Analytics</a></li>
+                        <li><a class="dropdown-item text-white" href="#" onclick="loadContent('monthlyAnalytics')">Monthly Analytics</a></li>
+                    </ul>
+                </li>
+                <!-- Logout Section -->
+                <li class="nav-item">
+                    <a class="nav-link text-white" href="#"><i class="fas fa-sign-out-alt"></i> Logout</a>
+                </li>
+            </ul>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <div class="flex-grow-1 p-4" id="mainContent">
+        <h1 class="text-primary">Welcome to The<- Cod<-</h1>
+        <p>A Vincent Corporation. We are honored to serve you.</p>
+
+        <!-- Canvas Elements for Charts -->
+        <canvas id="submitterChart" style="display: none;"></canvas>
+        <canvas id="leadClassificationChart" style="display: none;"></canvas>
+        <canvas id="locationChart" style="display: none;"></canvas>
+        <canvas id="loanStatusChart" style="display: none;"></canvas>
+        <canvas id="leadClassificationPieChart" style="display: none;"></canvas>
+        <canvas id="leadClassificationFunnelChart" style="display: none;"></canvas>
+        <canvas id="dealsSubmittedByChart" style="display: none;"></canvas>
+        <canvas id="dealsPerProductChart" style="display: none;"></canvas>
+    </div>
+</div>
+
+<script>
+    // Function to load content dynamically into the main content area
+    function loadContent(content) {
+        const mainContent = document.getElementById('mainContent');
+        fetch(`/${content}`)
+            .then(response => {
+                if (response.ok) {
+                    return response.text();
+                }
+                throw new Error('Network response was not ok');
+            })
+            .then(html => {
+                mainContent.innerHTML = html;
+                setupCharts(content); // Setup charts based on the content loaded
+            })
+            .catch(error => {
+                console.error('Error loading the content:', error);
+                mainContent.innerHTML = '<p>Error loading the content.</p>';
+            });
+    }
+
+    // Function to set up charts based on the content type
+    function setupCharts(content) {
+        if (content === 'totalRiders') {
+            displayCharts(['submitterChart', 'leadClassificationChart']);
+            setTimeout(renderChartsTotalRiders, 0);
+        } else if (content === 'ridersAnalytics') {
+            displayCharts(['locationChart', 'loanStatusChart', 'leadClassificationPieChart', 'leadClassificationFunnelChart']);
+            setTimeout(renderChartsRidersAnalytics, 0);
+        } else if (content === 'pipelineAnalytics') {
+            displayCharts(['leadClassificationPieChart', 'leadClassificationFunnelChart']);
+            setTimeout(renderChartsPipelineAnalytics, 0);
+        } else if (content === 'dealsAnalytics') {
+            // New section for deals analytics
+            displayCharts(['dealsSubmittedByChart', 'dealsPerProductChart']);
+            setTimeout(renderChartsDealsAnalytics, 0);
+        }
+    }
+
+    // Function to display specified charts
+    function displayCharts(chartIds) {
+        chartIds.forEach(id => {
+            const chartElement = document.getElementById(id);
+            if (chartElement) {
+                chartElement.style.display = 'block'; // Show chart
+            } else {
+                console.warn(`Chart element with ID "${id}" not found.`);
+            }
+        });
+    }
+
+    // Function to render charts for total riders
+    function renderChartsTotalRiders() {
+        // Prepare data for the submitter chart
+        const submitterData = {
+            labels: {{ submitted_by_data | map(attribute=0) | list | tojson | safe }},
+            datasets: [{
+                label: 'Number of Riders Submitted By',
+                data: {{ submitted_by_data | map(attribute=1) | list | tojson | safe }},
+                backgroundColor: 'orange',
+                borderColor: 'black',
+                borderWidth: 1
+            }]
+        };
+
+        // Prepare data for the lead classification chart
+        const leadClassificationData = {
+            labels: {{ lead_classification_data | map(attribute=0) | list | tojson | safe }},
+            datasets: [{
+                label: 'Number of Riders by Lead Classification',
+                data: {{ lead_classification_data | map(attribute=1) | list | tojson | safe }},
+                backgroundColor: 'rgba(54, 162, 235, 0.6)',
+                borderColor: 'black',
+                borderWidth: 1
+            }]
+        };
+
+        // Render the charts
+        renderChart('submitterChart', submitterData);
+        renderChart('leadClassificationChart', leadClassificationData);
+    }
+
+    // Function to render charts for riders analytics
+    function renderChartsRidersAnalytics() {
+        const locationData = {
+            labels: {{ location_data | map(attribute=0) | list | tojson | safe }},
+            datasets: [{
+                label: 'Riders by Location',
+                data: {{ location_data | map(attribute=1) | list | tojson | safe }},
+                backgroundColor: 'orange',
+                borderColor: 'black',
+                borderWidth: 1
+            }]
+        };
+
+        const loanStatusData = {
+            labels: {{ loan_status_data | map(attribute=0) | list | tojson | safe }},
+            datasets: [{
+                label: 'Riders by Loan Status',
+                data: {{ loan_status_data | map(attribute=1) | list | tojson | safe }},
+                backgroundColor: 'rgba(54, 162, 235, 0.6)',
+                borderColor: 'black',
+                borderWidth: 1
+            }]
+        };
+
+        // Render the charts
+        renderChart('locationChart', locationData);
+        renderChart('loanStatusChart', loanStatusData);
+    }
+
+    // Function to render charts for deals analytics
+    function renderChartsDealsAnalytics() {
+        // Prepare data for the deals submitted by chart
+        const dealsSubmittedByData = {
+            labels: {{ submitted_by_labels | tojson | safe }},
+            datasets: [{
+                label: 'Deals Submitted By',
+                data: {{ submitted_by_counts | tojson | safe }},
+                backgroundColor: 'rgba(255, 99, 132, 0.6)',
+                borderColor: 'rgba(255, 99, 132, 1)',
+                borderWidth: 1
+            }]
+        };
+
+        // Prepare data for the deals per product chart
+        const dealsPerProductData = {
+            labels: {{ products | tojson | safe }},
+            datasets: [{
+                label: 'Deals Per Product',
+                data: {{ product_counts | tojson | safe }},
+                backgroundColor: 'rgba(54, 162, 235, 0.6)',
+                borderColor: 'rgba(54, 162, 235, 1)',
+                borderWidth: 1
+            }]
+        };
+
+        // Render the charts
+        renderChart('dealsSubmittedByChart', dealsSubmittedByData);
+        renderChart('dealsPerProductChart', dealsPerProductData);
+    }
+
+    // Function to render charts for pipeline analytics
+    function renderChartsPipelineAnalytics() {
+        const leadClassificationPieData = {
+            labels: {{ lead_classification_labels | tojson | safe }},
+            datasets: [{
+                data: {{ lead_classification_counts | tojson | safe }},
+                backgroundColor: ['orange', 'green', 'skyblue', 'yellow'], // Customize colors as needed
+            }]
+        };
+
+        console.log('Lead_Classification_Pie_Data:', leadClassificationPieData); // Debugging log
+
+        // Validate the pie chart data before rendering
+        if (!Array.isArray(leadClassificationPieData.labels) || !Array.isArray(leadClassificationPieData.datasets[0].data)) {
+            console.error('Invalid pie chart data:', leadClassificationPieData);
+            return; // Prevent rendering if there's no valid data
+        }
+
+        renderPieChart('leadClassificationPieChart', leadClassificationPieData);
+        renderFunnelChart();
+    }
+
+    // Function to render bar charts
+    function renderChart(canvasId, chartData) {
+        const ctx = document.getElementById(canvasId);
+        if (ctx) {
+            new Chart(ctx.getContext('2d'), {
+                type: 'bar', // Change to 'bar' or other types as needed
+                data: chartData,
+                options: {
+                    scales: {
+                        y: {
+                            beginAtZero: true
+                        }
+                    }
+                }
+            });
+        } else {
+            console.warn(`Canvas element with ID "${canvasId}" not found.`);
+        }
+    }
+
+    // Function to render pie charts
+    function renderPieChart(canvasId, chartData) {
+        const ctx = document.getElementById(canvasId);
+        // Ensure data is valid before rendering
+        if (ctx && chartData.labels && chartData.labels.length && chartData.datasets[0].data && chartData.datasets[0].data.length) {
+            new Chart(ctx.getContext('2d'), {
+                type: 'pie',
+                data: chartData,
+                options: {
+                    responsive: true,
+                    plugins: {
+                        legend: {
+                            position: 'top',
+                        },
+                        tooltip: {
+                            callbacks: {
+                                label: function(tooltipItem) {
+                                    return tooltipItem.label + ': ' + tooltipItem.raw; // Show label and value
+                                }
+                            }
+                        }
+                    }
+                }
+            });
+        } else {
+            console.error('Invalid pie chart data:', chartData);
+        }
+    }
+
+    // Function to render funnel charts
+    function renderFunnelChart() {
+        const funnelData = {
+            labels: {{ funnel_labels | tojson | safe }}, // Use dynamic labels
+            datasets: [{
+                label: 'Funnel Data',
+                data: {{ funnel_counts | tojson | safe }}, // Use dynamic data
+                backgroundColor: ['#FF6384', '#36A2EB', '#FFCE56']
+            }]
+        };
+
+        const ctx = document.getElementById('leadClassificationFunnelChart');
+        if (ctx) {
+            new Chart(ctx.getContext('2d'), {
+                type: 'bar', // Changed from 'horizontalBar' to 'bar'
+                data: funnelData,
+                options: {
+                    indexAxis: 'y', // This makes the bar chart horizontal
+                    scales: {
+                        x: {
+                            beginAtZero: true
+                        },
+                        y: {
+                            stacked: true
+                        }
+                    }
+                }
+            });
+        } else {
+            console.error('Canvas element for funnel chart not found.');
+        }
+    }
+</script>
+
+{% endblock %}

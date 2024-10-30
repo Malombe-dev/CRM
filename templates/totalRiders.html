@@ -1,0 +1,19 @@
+{% extends "layout.html" %}
+
+{% block content %}
+<div class="container mt-4">
+    <h2>Riders Dashboard</h2>
+
+    <div class="row mt-5">
+        <div class="col-md-6 custom-bg"> <!-- Use custom CSS class -->
+            <h4>Riders Count by Submitted By</h4>
+            <canvas id="submitterChart"></canvas>
+        </div>
+        <div class="col-md-6 custom-bg"> <!-- Use custom CSS class -->
+            <h4>Riders Count by Lead Classification</h4>
+            <canvas id="leadClassificationChart"></canvas>
+        </div>
+    </div>
+</div>
+
+{% endblock %}

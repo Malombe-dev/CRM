@@ -1,0 +1,85 @@
+{% extends "layout.html" %}
+
+{% block content %}
+<div style="background-color: orange;" class="d-flex justify-content-between align-items-center p-3">
+    <h2>All Customers</h2>
+    <button id="download-btn" class="btn btn-success">
+        <i class="fas fa-download"></i> Download CSV
+    </button>
+</div>
+
+<div class="table-responsive">
+    <table id="rider-table" class="table table-bordered table-striped">
+        <thead>
+            <tr>
+                <th class="text-center" style="background-color: #007bff; color: white; padding: 10px;">Rider ID</th>
+                <th class="text-center" style="background-color: #007bff; color: white; padding: 10px;">Customer Name</th>
+                <th class="text-center" style="background-color: #007bff; color: white; padding: 10px;">Phone Number</th>
+                <th class="text-center" style="background-color: #007bff; color: white; padding: 10px;">Work Location</th>
+                <th class="text-center" style="background-color: #007bff; color: white; padding: 10px;">Current Motorbike</th>
+                <th class="text-center" style="background-color: #007bff; color: white; padding: 10px;">Fuel Consumption per Day</th>
+                <th class="text-center" style="background-color: #007bff; color: white; padding: 10px;">Pending Loan</th>
+                <th class="text-center" style="background-color: #007bff; color: white; padding: 10px;">Lead Classification</th>
+                <th class="text-center" style="background-color: #007bff; color: white; padding: 10px;">Comments</th>
+                <th class="text-center" style="background-color: #007bff; color: white; padding: 10px;">Submitted By</th>
+                <th class="text-center" style="background-color: #007bff; color: white; padding: 10px;">Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for rider in riders %}
+            <tr>
+                <td>{{ rider[0] }}</td>  <!-- rider_id -->
+                <td>{{ rider[1] }}</td>  <!-- customername -->
+                <td>{{ rider[2] }}</td>  <!-- phone_number -->
+                <td>{{ rider[3] }}</td>  <!-- work_location -->
+                <td>{{ rider[4] }}</td>  <!-- current_motorbike -->
+                <td>{{ rider[5] }}</td>  <!-- fuel_consumption_per_day -->
+                <td>{{ 'Yes' if rider[6] else 'No' }}</td>  <!-- any_pending_loan -->
+                <td>{{ rider[7] }}</td>  <!-- lead_classification -->
+                <td>{{ rider[8] }}</td>  <!-- any_comments -->
+                <td>{{ rider[9] }}</td>  <!-- submitted_by -->
+                <td>
+                    <form method="POST" action="{{ url_for('delete_rider', rider_id=rider[0]) }}" style="display:inline;">
+                        <button type="submit" class="btn btn-danger btn-sm">Delete</button>
+                    </form>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+
+<!-- Add Font Awesome CDN for download icon -->
+<script src="https://kit.fontawesome.com/a076d05399.js"></script>
+
+<!-- Simple JavaScript for CSV download -->
+<script>
+document.getElementById('download-btn').addEventListener('click', function () {
+    var table = document.getElementById('rider-table');
+    var rows = table.querySelectorAll('tr');
+    var csvContent = "";
+
+    // Convert each row into CSV format
+    rows.forEach(function (row) {
+        var rowData = [];
+        row.querySelectorAll('td, th').forEach(function (cell) {
+            rowData.push(cell.innerText.replace(/,/g, ''));  // Remove commas to avoid issues
+        });
+        csvContent += rowData.join(',') + '\n';  // Join row data by commas
+    });
+
+    // Create a link element to download the CSV
+    var blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+    var link = document.createElement('a');
+    link.href = URL.createObjectURL(blob);
+    link.setAttribute('download', 'riders_data.csv');
+    
+    // Append link to body and trigger click
+    document.body.appendChild(link);
+    link.click();
+    
+    // Remove the link after triggering download
+    document.body.removeChild(link);
+});
+</script>
+{% endblock %}
